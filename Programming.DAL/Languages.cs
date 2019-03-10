@@ -11,12 +11,14 @@ namespace Programming.DAL
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Languages
     {
         public int ID { get; set; }
         public string Language { get; set; }
         public string Founder { get; set; }
+        [Required(ErrorMessage ="Yýl Alaný Zorunlu bir alandýr...")]
         public Nullable<int> Year { get; set; }
         public string IsPopular { get; set; }
     }

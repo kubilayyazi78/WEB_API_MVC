@@ -27,17 +27,49 @@ namespace Programming.API.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, language);
         }
-        public Languages Post (Languages languages)
+        public HttpResponseMessage Post (Languages languages)
         {
-            return languagesDal.CreateLanguage(languages);
+            if (ModelState.IsValid)
+            {
+                var createdLanguage = languagesDal.CreateLanguage(languages);
+                return Request.CreateResponse(HttpStatusCode.Created, createdLanguage);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
         }
-        public Languages Put(int id,Languages languages)
+        public HttpResponseMessage Put(int id,Languages languages)
         {
-            return languagesDal.UpdateLanguage(id, languages);
+            if (languagesDal.IsThereAnyLanguage(id))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Bulunamadı");
+
+            }
+            else if (ModelState.IsValid==false)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, languagesDal.UpdateLanguage(id, languages));
+            }
+        
         }
-        public void Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
-            languagesDal.DeleteLanguage(id);
+            if (languagesDal.IsThereAnyLanguage(id)==false)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Kayıt bulunamadı");
+            }
+            else
+            {
+                languagesDal.DeleteLanguage(id);
+                return Request.CreateResponse(HttpStatusCode.NoContent);
+            }
         }
+
+       
     }
 }

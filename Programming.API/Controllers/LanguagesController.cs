@@ -12,6 +12,18 @@ namespace Programming.API.Controllers
     public class LanguagesController : ApiController
     {
         LanguagesDal languagesDal = new LanguagesDal();
+        [HttpGet]
+        public IHttpActionResult SearchByName(string name)
+        {
+            return Ok("Name : " + name);
+        }
+
+        [HttpGet]
+        public IHttpActionResult SearchBySurname(string surname)
+        {
+            return Ok("Name : " + surname);
+        }
+
 
         [ResponseType(typeof(IEnumerable<Languages>))]
         public IHttpActionResult Get()

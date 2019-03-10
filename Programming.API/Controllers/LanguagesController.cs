@@ -25,7 +25,7 @@ namespace Programming.API.Controllers
             return Ok("Name : " + surname);
         }
 
-
+        [Authorize]
         [ResponseType(typeof(IEnumerable<Languages>))]
         public IHttpActionResult Get()
         {

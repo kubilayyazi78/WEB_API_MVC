@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Programming.DAL
 {
-    public class LanguagesDal
+    public class LanguagesDal:BaseDAL
     {
-        ProgrammingDbEntities db = new ProgrammingDbEntities();
+        //ProgrammingDbEntities db = new ProgrammingDbEntities();
 
         public IEnumerable<Languages> GetAllLanguages()
         {

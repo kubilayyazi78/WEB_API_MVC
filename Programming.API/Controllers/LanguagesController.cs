@@ -5,68 +5,86 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Programming.API.Controllers
 {
     public class LanguagesController : ApiController
     {
         LanguagesDal languagesDal = new LanguagesDal();
-        public HttpResponseMessage Get()
+
+        [ResponseType(typeof(IEnumerable<Languages>))]
+        public IHttpActionResult Get()
         {
             var languages = languagesDal.GetAllLanguages();
 
-            return Request.CreateResponse(HttpStatusCode.OK, languages);
+            return Ok(languages);
+                
+                //Request.CreateResponse(HttpStatusCode.OK, languages);
         }
-        public HttpResponseMessage Get(int id)
+        [ResponseType(typeof(Languages))]
+        public IHttpActionResult Get(int id)
         {
             var language = languagesDal.GetLanguagesById(id);
             if (language==null)
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound,"Böyle kayıt bulunamadı");
+                return NotFound();
+                    //Request.CreateResponse(HttpStatusCode.NotFound,"Böyle kayıt bulunamadı");
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, language);
+            return Ok(language);
+                //Request.CreateResponse(HttpStatusCode.OK, language);
         }
-        public HttpResponseMessage Post (Languages languages)
+        [ResponseType(typeof(Languages))]
+        public IHttpActionResult Post (Languages languages)
         {
             if (ModelState.IsValid)
             {
                 var createdLanguage = languagesDal.CreateLanguage(languages);
-                return Request.CreateResponse(HttpStatusCode.Created, createdLanguage);
+                return CreatedAtRoute("DefaultApi", new { id = createdLanguage.ID }, createdLanguage);
+                    
+                   // Request.CreateResponse(HttpStatusCode.Created, createdLanguage);
             }
             else
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                return BadRequest(ModelState);
+                    //Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
         }
-        public HttpResponseMessage Put(int id,Languages languages)
+        [ResponseType(typeof(Languages))]
+        public IHttpActionResult Put(int id,Languages languages)
         {
             if (languagesDal.IsThereAnyLanguage(id))
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Bulunamadı");
+                return NotFound();
+                    //Request.CreateErrorResponse(HttpStatusCode.NotFound, "Bulunamadı");
 
             }
             else if (ModelState.IsValid==false)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                return BadRequest(ModelState);
+                    //Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.OK, languagesDal.UpdateLanguage(id, languages));
+                return Ok(languagesDal.UpdateLanguage(id, languages));
+                    //Request.CreateResponse(HttpStatusCode.OK, languagesDal.UpdateLanguage(id, languages));
             }
         
         }
-        public HttpResponseMessage Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
             if (languagesDal.IsThereAnyLanguage(id)==false)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Kayıt bulunamadı");
+                return NotFound();
+                    //Request.CreateErrorResponse(HttpStatusCode.NotFound, "Kayıt bulunamadı");
             }
             else
             {
                 languagesDal.DeleteLanguage(id);
-                return Request.CreateResponse(HttpStatusCode.NoContent);
+                return Ok(); 
+                    //Request.CreateResponse(HttpStatusCode.NoContent);
             }
         }
 

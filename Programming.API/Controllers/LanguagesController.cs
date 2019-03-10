@@ -1,4 +1,5 @@
-﻿using Programming.DAL;
+﻿using Programming.API.Attributes;
+using Programming.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,10 +36,11 @@ namespace Programming.API.Controllers
                 //Request.CreateResponse(HttpStatusCode.OK, languages);
         }
         [ResponseType(typeof(Languages))]
+        [ApiExceptionAttribute]
         public IHttpActionResult Get(int id)
         {
-            try
-            {
+            //try
+            //{
                 var language = languagesDal.GetLanguagesById(id);
                 if (language == null)
                 {
@@ -48,13 +50,13 @@ namespace Programming.API.Controllers
 
                 return Ok(language);
                 //Request.CreateResponse(HttpStatusCode.OK, language);
-            }
-            catch (Exception e)
-            {
-                HttpResponseMessage errorResponse = new HttpResponseMessage(HttpStatusCode.BadGateway);
-                errorResponse.ReasonPhrase = e.Message;
-                throw new HttpResponseException(errorResponse);
-            }
+            //}
+            //catch (Exception e)
+            //{
+                //HttpResponseMessage errorResponse = new HttpResponseMessage(HttpStatusCode.BadGateway);
+                //errorResponse.ReasonPhrase = e.Message;
+                //throw new HttpResponseException(errorResponse);
+            //}
         }
         [ResponseType(typeof(Languages))]
         public IHttpActionResult Post (Languages languages)

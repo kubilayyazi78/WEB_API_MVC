@@ -37,15 +37,24 @@ namespace Programming.API.Controllers
         [ResponseType(typeof(Languages))]
         public IHttpActionResult Get(int id)
         {
-            var language = languagesDal.GetLanguagesById(id);
-            if (language==null)
+            try
             {
-                return NotFound();
+                var language = languagesDal.GetLanguagesById(id);
+                if (language == null)
+                {
+                    return NotFound();
                     //Request.CreateResponse(HttpStatusCode.NotFound,"Böyle kayıt bulunamadı");
-            }
+                }
 
-            return Ok(language);
+                return Ok(language);
                 //Request.CreateResponse(HttpStatusCode.OK, language);
+            }
+            catch (Exception e)
+            {
+                HttpResponseMessage errorResponse = new HttpResponseMessage(HttpStatusCode.BadGateway);
+                errorResponse.ReasonPhrase = e.Message;
+                throw new HttpResponseException(errorResponse);
+            }
         }
         [ResponseType(typeof(Languages))]
         public IHttpActionResult Post (Languages languages)

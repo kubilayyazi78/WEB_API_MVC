@@ -11,13 +11,21 @@ namespace Programming.API.Controllers
     public class LanguagesController : ApiController
     {
         LanguagesDal languagesDal = new LanguagesDal();
-        public IEnumerable<Languages> Get()
+        public HttpResponseMessage Get()
         {
-            return languagesDal.GetAllLanguages();
+            var languages = languagesDal.GetAllLanguages();
+
+            return Request.CreateResponse(HttpStatusCode.OK, languages);
         }
-        public Languages Get(int id)
+        public HttpResponseMessage Get(int id)
         {
-            return languagesDal.GetLanguagesById(id);
+            var language = languagesDal.GetLanguagesById(id);
+            if (language==null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound,"Böyle kayıt bulunamadı");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, language);
         }
         public Languages Post (Languages languages)
         {

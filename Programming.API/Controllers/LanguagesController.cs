@@ -1,4 +1,5 @@
 ﻿using Programming.API.Attributes;
+using Programming.API.Security;
 using Programming.DAL;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace Programming.API.Controllers
         }
         [ResponseType(typeof(Languages))]
         [ApiExceptionAttribute]
+        [ApiAuthorizeAttribute(Roles ="Admin,User")]
         public IHttpActionResult Get(int id)
         {
             //try
